@@ -1,4 +1,15 @@
 <?php
+    if (isset($_POST['pay']))
+    {
+        $type = $_POST['type'];
+        $num = $_POST['num'];
+
+        standardize_credit($num);
+
+        validate_credit($num, $type);
+
+        header("location: Main.php");
+    }
     //Function to accept and clean up cc numbers
     function standardize_credit($num)
     {
@@ -38,3 +49,25 @@
             return (($checksum % 10) == 0) ? true : false;
     }
 ?>
+<html>
+    <head>
+        <title>Payment</title>
+    </head>
+    <body>
+        <center>
+            <form action="credit.php" method="post">
+                Card Type: <select name="type">
+                    <option value=""></option>
+                    <option value="v">Visa</option>
+                    <option value="m">Mastercard</option>
+                </select>
+                <br />
+                Name on card: <input type="text" name="cardname" /><br />
+                Card Number: <input type="text" name="num" /><br />
+                CCV: <input type="text" name="ccv" /><br />
+                Month: <input type="text" name="month" /> Year: <input type="text" name="year" /><br />
+                <input type="submit" value="Pay" name="pay" />
+            </form>
+        </center>
+    </body>
+</html>
