@@ -57,7 +57,7 @@
                 {
                     //Echos out all the products and give options
                     $counter++;
-                    echo "<tr><td>{$counter}</td><td>{$p['desc']}</td><td class=\"num\">", number_format($p['price'], 2), "</td>";
+                    echo "<tr><td>{$counter}</td><td>{$p['description']}</td><td class=\"num\">", number_format($p['price'], 2), "</td>";
 
                     echo "<td><a class=\"button\" href=\"{$_SERVER['PHP_SELF']}?add={$id}\"> Add to Cart</a></td></tr>\n";
                 }
