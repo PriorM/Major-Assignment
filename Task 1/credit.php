@@ -1,4 +1,11 @@
 <?php
+    session_start();
+
+    if (!isset($_SESSION['validsubmit']))
+    {
+        $_SESSION['validsubmit'] = true;
+    }
+
     if (isset($_POST['pay']))
     {
         $type = $_POST['type'];
@@ -8,7 +15,7 @@
 
         validate_credit($num, $type);
 
-        header("location: Main.php");
+        header("location: submit.php");
     }
     //Function to accept and clean up cc numbers
     function standardize_credit($num)
