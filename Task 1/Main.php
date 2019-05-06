@@ -1,3 +1,23 @@
+<?php
+        //Starts session
+        session_start();
+
+        require 'products.php';
+
+        if (isset($_GET['add']))
+        {
+            @$_SESSION['cart'][$_GET['add']]++;
+        }
+
+        $total_num = 0;
+        $total_value = 0;
+        foreach (@$_SESSION['cart'] as $id => $count)
+        {
+            $total_value += $products[$id]['price'] * $count;
+            $total_num += $count;
+        }
+    ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -23,16 +43,25 @@
         <br /><a href="cart.php">View your cart</a>
         </div>
         <p>Please choose what products you want below:</p>
-    </body>
-    <?php
-        //Opens database connection and starts session
-        session_start();
-        $db = mysqli_connect('localhost', 'root', '', 'task1') or die('DB Failure: '.mysql_error());        
-        $sid = session_id();
+        <table>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Buy It!</th>
+            </tr>
+            <?php
+                //Loop through all products and list
+                $counter = 0;
+                foreach ($products as $id => $p)
+                {
+                    //Echos out all the products and give options
+                    $counter++;
+                    echo "<tr><td>{$counter}</td><td>{$p['desc']}</td><td class=\"num\">", number_format($p['price'], 2), "</td>";
 
-        if (isset($_GET['add']))
-        {
-            @$_SESSION['cart'][$_GET['add']]++;
-        }
-    ?>
+                    echo "<td><a class=\"button\" href=\"{$_SERVER['PHP_SELF']}?add={$id}\"> Add to Cart</a></td></tr>\n";
+                }
+            ?>
+        </table>
+    </body>
 </html>
