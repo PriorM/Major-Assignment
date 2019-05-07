@@ -4,8 +4,6 @@
 
         require 'products.php';
 
-        unset($_SESSION['cart']);
-
         if (isset($_GET['add']))
         {
             @$_SESSION['cart'][$_GET['add']]++;

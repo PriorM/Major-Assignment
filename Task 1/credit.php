@@ -11,11 +11,19 @@
         $type = $_POST['type'];
         $num = $_POST['num'];
 
-        standardize_credit($num);
+        $st = standardize_credit($num);
+        $valid = validate_credit($num, $type);
 
-        validate_credit($num, $type);
+        $output = $valid ? 'Valid' : 'Invalid';
 
-        header("location: submit.php");
+        if ($output == "Invalid")
+        {
+            echo "<p>{$output} card. Try Again";
+        }
+        else
+        {
+            header("location: submit.php");
+        }
     }
     //Function to accept and clean up cc numbers
     function standardize_credit($num)

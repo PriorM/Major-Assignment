@@ -8,7 +8,7 @@
         unset($_SESSION['cart']);
     }
 
-    elseif (isset($_POST['update']))
+    /*elseif (isset($_POST['update']))
     {
         foreach ($_POST['update'] as $id => $val)
         {
@@ -25,7 +25,7 @@
                 }
             }
         }
-    }
+    }*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -59,8 +59,7 @@
                             $counter++;
                             echo "<tr><td>{$counter}</td><td>{$products[$id]['description']}</td>",
                             "<td class=\"num\">", number_format($products[$id]['price'], 2),
-                            "</td><td><input type=\"text\" size=\"3\" class=\"num\" ",
-                            "name=\"update[{$id}]\" value=\"{$c}\" /></td></tr>\n";
+                            "</td><td>{$c}</td></tr>\n";
 
                             //Update our total
                             $total += $products[$id]['price'] * $c;
@@ -74,7 +73,7 @@
                 <tr class="num">
                     <td colspan="4">
                         <input type="button" value="Keep Shopping" onclick="javascript:window.location.href='Main.php'" />
-                        <input type="submit" name="update" value="Update Quantities" />
+                        <!--<input type="submit" name="update" value="Update Quantities" />-->
                         <input type="submit" name="clear" value="Clear Cart"  onclick="return confirm('Are you sure you wish to empty your cart?')" />
                         <input type="button" value="Buy" onclick="javascript:window.location.href='credit.php'" />
                     </td>
