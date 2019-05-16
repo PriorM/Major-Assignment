@@ -1,10 +1,9 @@
 <?php
     $db = mysqli_connect('localhost', 'root', '', 'task2') or die('DB Failure: ' . mysqli_error());
+    $username = "";
 
     $answers = array();
-
-    $query = mysqli_query($db, "SELECT * FROM answers");
-
+    $query = mysqli_query($db, "SELECT Question, Answer FROM answers");
     while($row = mysqli_fetch_assoc($query))
     {
         $answers[] = $row;
@@ -12,9 +11,8 @@
 
     if (isset($_POST['login']))
     {
-        echo "Logged in!";
-
         $username = $_POST['username'];
+        $_SESSION['user'] = $username;
         $passed = false;
 
         $query = "SELECT pass FROM attempts WHERE username = '$username'";
@@ -23,7 +21,12 @@
         $rows = mysqli_fetch_assoc($result);
         if ($numRows === 5)
         {
+            echo "Logged in! <br />";
             echo "No attempts left.";
+        }
+        elseif($numRows === 0)
+        {
+            echo "Logged in!";
         }
         elseif ($numRows < 5)
         {
@@ -42,6 +45,7 @@
             }
             if ($passed == true)
             {
+                echo "Logged in! <br />";
                 echo "You have already passed the quiz";
             }
         }
@@ -49,29 +53,49 @@
     }
 
     if (isset($_POST['uploadAnswers']))
-    {
-        $file = file_get_contents($_FILES['answers']['tmp_name']);
-
+    {   
+        global $username;
+        $correct = 0;
+        $pass = 0;
+        $x = 0;
+        $studAnswers = array();
+        $file = file_get_contents($_FILES['answers']['tmp_name']);  
+        
         $file = explode("\n", $file);
-
-        foreach($file as $file)
-        {
-            $file = explode(",", $file);            
-        }
-
         array_walk($file, 'trim_value');
-
-        //Compare answers
-        for ($i = 0; $i <= 40; $i++)
+        foreach($file as $f)
         {
-            
+            $studAnswers[$x] = explode(",", $f);
+            $x++;         
         }
+        //Compare answers
+        for ($i = 0; $i < 40; $i++)
+        {
+            if ($studAnswers[$i][0] == $answers[$i]['Question'])
+            {
+                if ($studAnswers[$i][1] != $answers[$i]['Answer'])
+                {
+                    break;
+                }
+                else
+                {
+                    $correct++;
+                }
+            }
+        }
+        if ($correct == 40)
+        {
+            $pass = 1;
+        }
+        $query = "INSERT INTO attempts (username, pass) VALUES ('$username', '$pass')";
+        mysqli_query($db, $query);
     }
 
     function trim_value(&$value)
     {
         $value = trim($value);
     }
+    
 ?>
 <html>
     <head>
