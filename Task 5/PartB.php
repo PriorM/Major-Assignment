@@ -1,4 +1,7 @@
 <?php
+    error_reporting(0);
+    ini_set('display_errors', 0);
+    
     $db = mysqli_connect('localhost', 'root', '', 'task5') or die('DB Failure: ' . mysql_error());
 
     $debts = array();
@@ -12,34 +15,41 @@
 
     date_default_timezone_set('Australia/Sydney');
 
-    function count_days($a, $b)
+    function count_days($due, $current)
     {
-        $a_parts = getdate($a);
-        $b_parts = getdate($b);
-
-        $a_new = mktime(12, 0, 0, $a_dt['mon'], $a_dt['mday'], $a_dt['year']);
-        $b_new = mktime(12, 0, 0, $b_dt['mon'], $b_dt['mday'], $b_dt['year']);
-
-        return round(abs($a_new - $b_new) / 86400);
+        $secondsDiff = $due - $current;
+        $dayDiff = $secondsDiff/86400;
+        return $dayDiff;
     }
 
-    function sendMail($person)
+    function sendMail($email, $debt, $due, $name)
     {
-        return 0;
+        $subject = "Debt Overdue";
+        $message = $name . " your debt of $" . $debt . " was due on " . $due . ". Please payup.";
+        $headers = "From: task5B@asssessment.com";
+
+        //mail($email, $subject, $message, $headers);
+
+        echo "Email sent to " . $name . "<br />";
     }
 
-    $current = date("m/d/y");
+    $current = date('Y/m/d');
 
     foreach($debts as $person)
     {
-        $diff = count_days($current, $person['dueDate']);
+        $input = strtotime($person['dueDate']);
+        $date = date('Y/m/d', $input);
+
+        $diff = count_days($date, $current);
         if ($diff !== 0)
         {
             continue;
         }
         if ($diff === 0)
         {
-            sendMail($person);
+            $name = $person['title'] . ". " . $person['firstName'] . " " . $person['lastName'];
+            sendMail($person['email'], $person['debtAmount'], $person['dueDate'], $name);
         }
     }
+    echo "All emails sent";
 ?>
